@@ -12,7 +12,7 @@ var gulp = require('gulp'),
     eslint = require('gulp-eslint');
 
 var config = {
-    src: './2015/',
+    src: './src/',
     dest: './build/'
 };
 
