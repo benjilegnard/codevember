@@ -1,0 +1,11 @@
+html
+    title #codevember
+body
+  ul
+    - for (var x = 1; x <= 30; x++)
+      - var day = ( ( '' + x ).length < 2) ? '0' + x : x
+      li
+        a(href='./2015/11/' + day + '/')
+          = day
+
+    canvas#canvas
