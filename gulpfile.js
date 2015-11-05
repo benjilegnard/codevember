@@ -83,11 +83,16 @@ gulp.task('connect', function () {
     });
 });
 
+gulp.task('deploy',['build'], function() {
+    return gulp.src(config.dest+'/**/*')
+        .pipe(ghPages());
+});
+
 gulp.task('watch', function () {
     gulp.watch(config.src + '**/*.scss', ['sass']);
     gulp.watch(config.src + '**/*.jade', ['jade']);
     gulp.watch(config.src + '**/*.js', ['es6to5']);
 });
 
-gulp.task('build', ['copy-libs', 'sass','jade','es6to5']);
+gulp.task('build', ['copy-libs', 'sass', 'jade', 'es6to5']);
 gulp.task('default', ['connect', 'watch']);
