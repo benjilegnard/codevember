@@ -7,14 +7,19 @@ var gulp = require('gulp'),
     autoprefixer = require('gulp-autoprefixer'),
     minify = require('gulp-minify-css'),
     concat = require('gulp-concat'),
+    rename = require('gulp-rename'),
     ghPages = require('gulp-gh-pages'),
+    data = require('gulp-data'),
     uglify = require('gulp-uglify'),
-    eslint = require('gulp-eslint');
+    eslint = require('gulp-eslint'),
+    babel = require("gulp-babel");
 
 var config = {
     src: './src/',
-    dest: './build/'
+    dest: './build/',
+    deps:'./node_modules/'
 };
+
 
 gulp.task('lint', function () {
     return gulp.src([config.src + '**/*.js'])
@@ -29,8 +34,36 @@ gulp.task('lint', function () {
         .pipe(eslint.failAfterError());
 });
 
+gulp.task('copy-libs',function(){
+    var libs = [
+        config.deps + 'delaunay-fast/delaunay.js',
+        config.deps + 'matter-js/build/matter.js',
+        config.deps + 'pixi.js/bin/pixi.js',
+        config.deps + 'three/three.js',
+        config.deps + 'gsap/three.js'
+    ];
+
+    return gulp.src([config.src + '**/*.js'])
+        .pipe(rename({dirname: ''}))
+        .dest(gulp.dest(config.dest+'/libs'));
+});
+
+gulp.task('es6to5',function(){
+
+    return gulp.src(config.src +"**/*.js")
+        //.pipe(sourcemaps.init())
+        .pipe(babel())
+        //.pipe(concat("all.js"))
+        //.pipe(sourcemaps.write("."))
+        .pipe(gulp.dest(config.dest))
+        .pipe(connect.reload());
+});
+
 gulp.task('jade', function () {
     gulp.src(config.src + '**/*.jade')
+        .pipe(data(function(file) {
+            return require('./data.json');
+        }))
         .pipe(jade())
         .pipe(gulp.dest(config.dest))
         .pipe(connect.reload());
@@ -53,6 +86,8 @@ gulp.task('connect', function () {
 gulp.task('watch', function () {
     gulp.watch(config.src + '**/*.scss', ['sass']);
     gulp.watch(config.src + '**/*.jade', ['jade']);
+    gulp.watch(config.src + '**/*.js', ['es6to5']);
 });
 
+gulp.task('build', ['copy-libs', 'sass','jade','es6to5']);
 gulp.task('default', ['connect', 'watch']);

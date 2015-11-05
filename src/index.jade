@@ -1,11 +1,75 @@
 html
-    title #codevember
-body
-  ul
-    - for (var x = 1; x <= 30; x++)
-      - var day = ( ( '' + x ).length < 2) ? '0' + x : x
-      li
-        a(href='./2015/11/' + day + '/')
-          = day
+    head
+        title #codevember
+        link(href='https://fonts.googleapis.com/css?family=Poiret+One',rel='stylesheet',type='text/css')
+        style.
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                font-family: 'Poiret One', cursive;
+                background-color: darkgrey;
+                color: white;
+            }
 
-    canvas#canvas
+            .over {
+                position: fixed
+            }
+
+            ul {
+                margin: 0 auto;
+                width: 50%;
+            }
+
+            h1 {
+                text-align: center;
+                text-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
+                margin-top: 1em;
+            }
+
+            li {
+                list-style-type: none
+            }
+
+            a {
+                text-decoration: none;
+                background-color: white;
+                color: black;
+            }
+
+            .card a {
+                display: block;
+                padding: .5em;
+                font-size: 1.5em;
+            }
+
+            a:hover, a:focus {
+                background-color: black;
+                color: white;
+                transition: all .5s ease-in-out;
+            }
+
+            canvas {
+                width: 100%;
+                height: 100%;
+            }
+
+            .card {
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+                background: white;
+                padding: 1em;
+                margin: 0 1em 1em 0;
+            }
+    body
+        h1 Codevember 2015
+        ul
+            - for(var x = 1; x <= 30; x++)
+                //prepend 0 to small numbers
+                - var day = ( ( '' + x ).length < 2) ? '0' + x : x
+                li.card
+                    a(href='./2015/11/' + day + '/')
+                        = day
+                        | &nbsp;
+                        = days[x-1].title
+        canvas#canvas
