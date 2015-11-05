@@ -1,5 +1,0 @@
-class Behavior {
-    constructor(options){
-
-    }
-}
