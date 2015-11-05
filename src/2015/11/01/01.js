@@ -1,0 +1,5 @@
+class Behavior {
+    constructor(options){
+
+    }
+}
