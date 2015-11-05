@@ -35,24 +35,24 @@ gulp.task('lint', function () {
 });
 
 gulp.task('copy-libs',function(){
-    var libs = [
-        config.deps + 'delaunay-fast/delaunay.js',
-        config.deps + 'matter-js/build/matter.js',
-        config.deps + 'pixi.js/bin/pixi.js',
-        config.deps + 'three/three.js',
-        config.deps + 'gsap/three.js'
-    ];
-
-    return gulp.src([config.src + '**/*.js'])
+    return gulp.src([
+            config.deps + 'delaunay-fast/delaunay.js',
+            config.deps + 'matter-js/build/matter.js',
+            config.deps + 'pixi.js/bin/pixi.js',
+            config.deps + 'three/three.js',
+            config.deps + 'gsap/three.js'
+        ])
         .pipe(rename({dirname: ''}))
-        .dest(gulp.dest(config.dest+'/libs'));
+        .pipe(gulp.dest(config.dest+'/libs'));
 });
 
 gulp.task('es6to5',function(){
 
     return gulp.src(config.src +"**/*.js")
         //.pipe(sourcemaps.init())
-        .pipe(babel())
+        .pipe(babel({
+            presets: ['es2015']
+        }))
         //.pipe(concat("all.js"))
         //.pipe(sourcemaps.write("."))
         .pipe(gulp.dest(config.dest))
