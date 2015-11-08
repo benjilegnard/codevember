@@ -1,0 +1,16 @@
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: darkgrey;
+  background: linear-gradient(to bottom, whitesmoke 0%, lightgrey 100%);
+}
+
+p {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-family: courier;
+  font-size: .75em;
+  margin-right: .75em;
+}

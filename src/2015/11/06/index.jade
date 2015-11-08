@@ -1,14 +1,11 @@
 html
     head
-        title #Codevember #
-        style.
-            body{
-                width:100%;
-                height:100%;
-                overflow:hidden;
-                margin:0;
-                padding:0;
-            }
+        title #Codevember #6 #{days[5].title}
+        link(rel='stylesheet',href='./06.css')
 
     body
-        canvas#canvas
+        canvas#c
+        p.legend
+            | click anywhere to start a tree or
+            a(href='javascript:reset()') reset
+        script(src='./06.js')
