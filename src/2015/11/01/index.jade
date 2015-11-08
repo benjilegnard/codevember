@@ -1,19 +1,8 @@
 html
     head
-        title
-            | #Codevember #1&nbsp;
-            = days[0].title
-
-        style.
-            body{
-                width:100%;
-                height:100%;
-                overflow:hidden;
-                margin:0;
-                padding:0;
-            }
-
+        title #Codevember #1 #{days[0].title}
+        link(rel='stylesheet',href='./01.css')
     body
         canvas#canvas
 
-        script.
+        script(src='./01.js')

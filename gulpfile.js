@@ -12,14 +12,14 @@ var gulp = require('gulp'),
     data = require('gulp-data'),
     uglify = require('gulp-uglify'),
     eslint = require('gulp-eslint'),
-    babel = require("gulp-babel");
+    babel = require("gulp-babel"),
+    fs = require('fs');
 
 var config = {
     src: './src/',
     dest: './build/',
     deps:'./node_modules/'
 };
-
 
 gulp.task('lint', function () {
     return gulp.src([config.src + '**/*.js'])

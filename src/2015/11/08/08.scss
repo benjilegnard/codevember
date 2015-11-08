@@ -1,0 +1,22 @@
+body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background-color:#111;
+  margin:0;
+  padding:0;
+}
+.gooey{
+  -webkit-filter: url("#goo");
+  filter: url("#goo");
+  //filter: blur(10px);
+}
+p{
+  color:white;
+  position:fixed;
+  bottom:0;
+  right:0;
+  font-family:courier;
+  font-size:.75em;
+  margin-right:.75em;
+}
