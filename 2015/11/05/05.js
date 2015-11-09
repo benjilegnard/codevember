@@ -11,22 +11,19 @@ var ANGULAR_VARIATION = TAU / 6; //angle range in radiant in wich to change the 
 var VARIATION_FREQ = 0.01;
 
 var frameCount = 0,
-    origin = {
-    x: window.innerWidth / 2,
-    y: window.innerHeight / 2
-},
+    origin = {},
     circles = [],
     canvas = document.getElementById('c'),
     context = canvas.getContext('2d');
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+function resetOrigin(origin) {
+    origin.x = window.innerWidth / 2;
+    origin.y = window.innerHeight / 2;
 }
 
 function circleFactory(opts) {
     var circle = opts || {};
-    circle.x = opts.y;
+    circle.x = opts.x;
     circle.y = opts.y;
     circle.initialTimestamp = opts.initialTimestamp;
     circle.color = cycleColor(opts);
@@ -85,13 +82,6 @@ function particleWave(timestamp) {
     }
 }
 
-function cleanUp(circle) {
-    if (isDead(circle)) {
-        circles.splice(circles.indexOf(circle), 1);
-        deadCircles.push(circle);
-    }
-}
-
 function animate(timestamp) {
     //reset canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -102,7 +92,7 @@ function animate(timestamp) {
     circles.forEach(move);
 
     if (frameCount % GEN_FREQUENCY == 0) {
-        particleWave(timestamp);
+        particleWave(frameCount);
     }
     frameCount++;
     requestAnimationFrame(animate);
@@ -111,11 +101,9 @@ function animate(timestamp) {
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    origin = {
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2
-    };
+    resetOrigin(origin);
 }
+
 window.addEventListener('resize', resize);
 document.addEventListener('DOMContentLoaded', function (event) {
     resize();

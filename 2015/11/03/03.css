@@ -3,7 +3,9 @@ body {
   height: 100%;
   overflow: hidden;
   background-color: darkgrey;
-  background: linear-gradient(to bottom, whitesmoke 0%, lightgrey 100%); }
+  background: linear-gradient(to bottom, whitesmoke 0%, lightgrey 100%);
+  margin: 0;
+  padding: 0; }
 
 p {
   position: fixed;
