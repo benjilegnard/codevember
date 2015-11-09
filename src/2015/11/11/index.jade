@@ -1,16 +1,13 @@
 html
     head
         title
-            | #Codevember #11
-            = day[10].title
-        style.
-            body{
-                width:100%;
-                height:100%;
-                overflow:hidden;
-                margin:0;
-                padding:0;
-            }
-
+            | #Codevember #11 #{days[10].title}
+        link(rel='stylesheet',href='./11.css')
     body
         canvas#canvas
+        script(src='../../../libs/three.js')
+        script(src='./11.js')
+        script.
+            document.addEventListener('DOMContentLoaded',function(){
+                initialize();
+            });

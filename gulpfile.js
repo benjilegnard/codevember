@@ -13,7 +13,8 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     eslint = require('gulp-eslint'),
     babel = require("gulp-babel"),
-    fs = require('fs');
+    fs = require('fs'),
+    del = require('del');
 
 var config = {
     src: './src/',
@@ -49,12 +50,12 @@ gulp.task('copy-libs',function(){
 gulp.task('es6to5',function(){
 
     return gulp.src(config.src +"**/*.js")
-        //.pipe(sourcemaps.init())
+        .pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['es2015']
-        }))
+        })).pipe(uglify())
         //.pipe(concat("all.js"))
-        //.pipe(sourcemaps.write("."))
+        .pipe(sourcemaps.write("."))
         .pipe(gulp.dest(config.dest))
         .pipe(connect.reload());
 });
@@ -92,6 +93,10 @@ gulp.task('watch', function () {
     gulp.watch(config.src + '**/*.scss', ['sass']);
     gulp.watch(config.src + '**/*.jade', ['jade']);
     gulp.watch(config.src + '**/*.js', ['es6to5']);
+});
+
+gulp.task('clean', function () {
+    return del([config.dest]);
 });
 
 gulp.task('build', ['copy-libs', 'sass', 'jade', 'es6to5']);
