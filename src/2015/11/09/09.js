@@ -1,14 +1,11 @@
 const
-    DEFAULT_SPEED = 0.5,
-    BASE_COLOR='white',
-    COLORS=[],
+    TAU = Math.PI * 2,
+    COLORS=[0x2C4549,0x78BDB0,0x81CFB6,0x8BE1BC,0xC6F7E2],
     POINTS_QUANTITY=32,
-    LINE_WIDTH=0.5,
-    MIN_DRAW_DISTANCE=20,
+    LINE_WIDTH=.25,
+    MIN_DRAW_DISTANCE=50,
     MAX_DRAW_DISTANCE=200,
-    LINE_ZIG = 5,
-    LINE_ZAG = 40,
-    SPEED = .6,
+    SPEED = TAU/360,
 
     canvas = document.getElementById('c'),
     context = canvas.getContext('2d'),
@@ -16,66 +13,125 @@ const
 
 let
 //resize
-    resizer = (event) =>{
-        canvas.width=window.innerWidth;
-        canvas.height=window.innerHeight;
+    resizer = () =>{
+        canvas.width    = window.innerWidth;
+        canvas.height   = window.innerHeight;
     },
     animator = () => {
         context.clearRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = '#'+COLORS[0].toString(16);
+        context.fillRect(0, 0, canvas.width, canvas.height);
         points.forEach((point)=>{
             movePoint(point);
+            drawPoint(point);
             collisionDetector(point);
             //creates a table of points that are near the current one.
             points.filter((obj) => {
-                var distance = Math.sqrt( Math.pow((obj.x-point.x), 2) + Math.pow((obj.y-point.y), 2));
-                return distance < MAX_DRAW_DISTANCE && distance > MIN_DRAW_DISTANCE;
-            })
+                    var distance = Math.sqrt( Math.pow((obj.x-point.x), 2) + Math.pow((obj.y-point.y), 2));
+                    return distance < MAX_DRAW_DISTANCE && distance > MIN_DRAW_DISTANCE;
+                })
                 .forEach((dest) => {
-                    drawLine(point,dest);
+                    drawLine(point, dest);
+                    drawLine(dest, point);
                 });
         });
+
         requestAnimationFrame(animator);
     },
-    drawLine = function(origine,destination){
-        context.beginPath();
-        context.moveTo(origine.x, origine.y);
-        context.lineTo(destination.x, destination.y);
-        context.lineWidth = LINE_WIDTH;
-        context.strokeStyle = BASE_COLOR;
-        context.stroke();
-    },
-    zigZag = () => {
+    drawPoint = (point) => {
+        context.fillStyle = '#'+COLORS[4].toString(16);
+        context.fillRect(point.x-1, point.y-1, 3, 3);
+        //context.fillRect(point.o.x, point.o.y, 1, 1);
 
     },
+//draw zig zags
+    drawLine = function(origine,destination){
+        let angle = angleFromPoints(origine, destination),
+            currentPoint = origine,
+            distance = distanceFromPoints(origine,destination),
+            step = distance / (Math.random() * 10 + 10);
+
+        context.beginPath();
+        context.moveTo(origine.x, origine.y);
+        let interPoint;
+
+        for(let i = 1;i*step < distance;i ++){
+            currentPoint = {
+                x : origine.x + Math.cos(angle)*i*step,
+                y : origine.y + Math.sin(angle)*i*step
+            };
+            interPoint = pointPerpendicularTo(currentPoint, angle, Math.random()*10,(i % 2 == 0));
+            context.lineTo(interPoint.x, interPoint.y);
+        }
+        context.lineTo(destination.x, destination.y);
+        context.lineWidth = LINE_WIDTH;
+        //choose color based on distance
+        let distanceRatio = distance/(MAX_DRAW_DISTANCE-MIN_DRAW_DISTANCE);
+        if(distanceRatio < 0.3){
+            context.strokeStyle = '#'+COLORS[2].toString(16);
+        }else if(distanceRatio > 0.6){
+            context.strokeStyle = '#'+COLORS[3].toString(16);
+        }else{
+            context.strokeStyle = '#'+ COLORS[1].toString(16);
+        }
+        context.stroke();
+        context.closePath();
+    },
+    pointPerpendicularTo = (origin, angle, distance, leftOrRight) => {
+        return {
+            x : origin.x + Math.cos(angle + (leftOrRight ? TAU/4 : -TAU/4 ))*distance,
+            y : origin.y + Math.sin(angle + (leftOrRight ? TAU/4 : -TAU/4 ))*distance
+        };
+    },
+    angleFromPoints = (origine,destination) => {
+        return Math.atan2(destination.y - origine.y, destination.x - origine.x);
+    },
+    distanceFromPoints = (origine,destination) => {
+        return Math.sqrt( (origine.x-destination.x)*(origine.x-destination.x) + (origine.y-destination.y)*(origine.y-destination.y) );
+    },
     movePoint = (point) => {
-        point.x += Math.cos(point.d)*SPEED;
-        point.y += Math.sin(point.d)*SPEED;
+        //move drawing point
+        point.x = point.o.x + Math.cos(point.a)*point.r;
+        point.y = point.o.x + Math.sin(point.a)*point.r;
+        //rotate drawing point
+        point.a += SPEED;
+        //move origin
+        point.o.x += Math.cos(point.d);
+        point.o.y += Math.sin(point.d);
+
     },
 //if a point gets lost outside the canvas, put it back on the other side.
     collisionDetector = (point) => {
-        if(point.x<0){
-            point.x = window.innerWidth;
+        if(point.o.x < 0){
+            point.o.x = window.innerWidth;
             return;
         }
-        if(point.x > window.innerWidth){
-            point.x = 0;
+        if(point.o.x > window.innerWidth){
+            point.o.x = 0;
             return;
         }
-        if(point.y<0){
-            point.y == window.innerHeight;
+        if(point.o.y < 0){
+            point.o.y = window.innerHeight;
             return;
         }
-        if(point.y > window.innerHeight){
-            point.y = 0;
-            return;
+        if(point.o.y > window.innerHeight){
+            point.o.y = 0;
         }
-    },createPoint = () => {
+    },
+    createPoint = () => {
         return {
-            //random x position
-            x: Math.floor(Math.random()*window.innerWidth),
-            y: Math.floor(Math.random()*window.innerHeight),
-            //random radian angle
-            d:Math.random()*2*Math.PI,
+            x:window.innerWidth/2,
+            y:window.innerHeight/2,
+            //random position
+            o:{
+                x: Math.floor(Math.random()*window.innerWidth),
+                y: Math.floor(Math.random()*window.innerHeight)
+            },
+            //random starting radian angle
+            a:Math.random() * 2 *Math.PI,
+            //direction of the origin
+            d:Math.random() * 2 *Math.PI,
+            r:Math.random() * 200,
             v:SPEED
         };
     },
@@ -88,9 +144,9 @@ let
         }
     },
     clickHandler = (event) => {
-        const point = createPoint(event);
-        point.x = event.offsetX;
-        point.y = event.offsetY;
+        const point = createPoint();
+        point.o.x = event.clientX;
+        point.o.y = event.clientY;
         points.push(point);
     },
     initializer = () => {
@@ -100,4 +156,5 @@ let
     };
 
 window.addEventListener('resize', resizer, false);
+canvas.addEventListener('click', clickHandler);
 document.addEventListener('DOMContentLoaded', initializer);
