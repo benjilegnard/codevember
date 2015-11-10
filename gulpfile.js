@@ -42,7 +42,7 @@ gulp.task('copy-libs',function(){
             config.deps + 'matter-js/build/matter.js',
             config.deps + 'pixi.js/bin/pixi.js',
             config.deps + 'three/three.js',
-            config.deps + 'gsap/three.js'
+            config.deps + 'gsap/src/uncompressed/TweenLite.min.js'
         ])
         .pipe(rename({dirname: ''}))
         .pipe(gulp.dest(config.dest+'/libs'));
@@ -54,7 +54,8 @@ gulp.task('es6to5',function(){
         //.pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['es2015']
-        })).pipe(uglify())
+        }))
+        .pipe(uglify())
         //.pipe(concat("all.js"))
         //.pipe(sourcemaps.write("."))
         .pipe(gulp.dest(config.dest))
@@ -78,6 +79,14 @@ gulp.task('sass', function () {
         .pipe(connect.reload());
 });
 
+gulp.task('copy-imgs',function(){
+    return gulp.src([
+            config.src + '**/*.ico',
+            config.src + '**/*.png',
+            config.src + '**/*.jpg'
+        ])
+        .pipe(gulp.dest(config.dest));
+});
 gulp.task('connect', function () {
     connect.server({
         root: config.dest,
@@ -94,11 +103,13 @@ gulp.task('watch', function () {
     gulp.watch(config.src + '**/*.scss', ['sass']);
     gulp.watch(config.src + '**/*.jade', ['jade']);
     gulp.watch(config.src + '**/*.js', ['es6to5']);
+    gulp.watch([config.src + '**/*.ico',config.src + '**/*.png',config.src + '**/*.jpg'], ['copy-imgs']);
 });
 
 gulp.task('clean', function () {
     return del([config.dest]);
 });
 
-gulp.task('build', ['copy-libs', 'sass', 'jade', 'es6to5']);
+gulp.task('build', ['copy-libs','copy-imgs', 'sass', 'jade', 'es6to5']);
+
 gulp.task('default', ['connect', 'watch']);
