@@ -4,6 +4,39 @@ html
             | #Codevember #12 #{days[11].title}
         link(rel='stylesheet',href='./12.css')
     body
+        //bar length
+        - var bl = 8
+        //hour-minutes-seconds digits
+        - var digits = ['h-1','h-2','m-1','m-2','s-1','s-2']
+        //7 bars of a digit
+        - var bars = ['a','b','c','d','e','f','g'];
+        // space between digits
+        - var space = 8;
+        #container
+            svg(
+                xmlns='http://www.w3.org/2000/svg',
+                xmlns:xlink='http://www.w3.org/1999/xlink',
+                viewBox='0 0 32 64',
+                width='100%',
+                height='auto'
+            )
+                //http://www.w3.org/TR/SVG/paths.html#PathDataLinetoCommands
+                //https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Date
+                defs
+                    path#a(d='M 1,1 l 1,-1 h #{bl} l 1,1 l -1,1 h -#{bl} Z')
+                    path#b(d='M #{bl + 3},1 l 1,1 v #{bl} l -1,1 l -1,-1 v -#{bl} Z')
+                    path#c(d='M #{bl + 3},#{bl + 3} l 1,1 v #{bl} l -1,1 l -1,-1 v -#{bl} Z')
+                    path#d(d='M #{bl + 3},#{bl*2 + 5} l-1,1 h -#{bl} l -1,-1 l 1,-1 h#{bl} Z')
+                    path#e(d='M 1,#{bl*2 + 5} l -1,-1 v -#{bl} l 1,-1 l 1,1 v #{bl} Z')
+                    path#f(d='M 1,#{bl + 3} l -1,-1 v -#{bl} l 1,-1 l 1,1 v #{bl} Z')
+                    path#g(d='M 1,#{bl + 3} l 1,-1 h #{bl} l 1,1 l -1,1 h -#{bl} Z')
+                    path#dp(d='M 0,0 l1,0 l1,1 l0,1 Z')
+                each digit, index in digits
+                g(id='#{digit}', transform='translate(#{index * (bl+space)},0) skewX(-6)')
+                    each bar in bars
+                    use(xlink:href='##{bar}',class='off')
+                if(index % 2 == 1)
+                use(xlink:href='#dp',transform='translate(#{index * (bl + space)},#{bl + 4})',class='on')
+                use(xlink:href='#dp',transform='translate(#{index * (bl + space)},#{bl + 8})',class='on')
         canvas#canvas
-        script(src='../../../libs/matter.js')
         script(src='./12.js')

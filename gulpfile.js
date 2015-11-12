@@ -55,7 +55,7 @@ gulp.task('es6to5',function(){
         .pipe(babel({
             presets: ['es2015']
         }))
-        .pipe(uglify())
+        //.pipe(uglify())
         //.pipe(concat("all.js"))
         //.pipe(sourcemaps.write("."))
         .pipe(gulp.dest(config.dest))
@@ -90,7 +90,8 @@ gulp.task('copy-imgs',function(){
 gulp.task('connect', function () {
     connect.server({
         root: config.dest,
-        livereload: true
+        livereload: true,
+        port: 8888
     });
 });
 

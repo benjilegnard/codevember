@@ -1,7 +1,23 @@
+$red  :#FF0000;
+$grey :#666666;
+$black:#000000;
+
 body {
-  width: 100%;
-  height: 100%;
+  width   : 100%;
+  height  : 100%;
   overflow: hidden;
-  margin: 0;
-  padding: 0;
+  margin  : 0;
+  padding : 0;
+  background-color:$black;
+}
+
+.on{
+  fill:$red;
+  stroke:black;
+  stroke-width:.2;
+}
+.off{
+  fill:$grey;
+  stroke:black;
+  stroke-width:.2;
 }
