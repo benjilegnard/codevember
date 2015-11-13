@@ -16,9 +16,7 @@ html
             svg(
                 xmlns='http://www.w3.org/2000/svg',
                 xmlns:xlink='http://www.w3.org/1999/xlink',
-                viewBox='0 0 32 64',
-                width='100%',
-                height='auto'
+                viewBox='-4 0 #{(bl+2+space)*6} #{bl*2 + 6}'
             )
                 //http://www.w3.org/TR/SVG/paths.html#PathDataLinetoCommands
                 //https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Date
@@ -30,13 +28,14 @@ html
                     path#e(d='M 1,#{bl*2 + 5} l -1,-1 v -#{bl} l 1,-1 l 1,1 v #{bl} Z')
                     path#f(d='M 1,#{bl + 3} l -1,-1 v -#{bl} l 1,-1 l 1,1 v #{bl} Z')
                     path#g(d='M 1,#{bl + 3} l 1,-1 h #{bl} l 1,1 l -1,1 h -#{bl} Z')
-                    path#dp(d='M 0,0 l1,0 l1,1 l0,1 Z')
+                    path#dp(d='M 0,0 L 2,0 L 2,2 L 0,2 Z')
                 each digit, index in digits
-                g(id='#{digit}', transform='translate(#{index * (bl+space)},0) skewX(-6)')
-                    each bar in bars
-                    use(xlink:href='##{bar}',class='off')
-                if(index % 2 == 1)
-                use(xlink:href='#dp',transform='translate(#{index * (bl + space)},#{bl + 4})',class='on')
-                use(xlink:href='#dp',transform='translate(#{index * (bl + space)},#{bl + 8})',class='on')
+                    g(id='#{digit}', transform='translate(#{index * (bl + space)},0) skewX(-8)')
+                        each bar in bars
+                            use(xlink:href='##{bar}',class='off')
+                    if(index % 2 !== 0 && index != 5)
+                        g(transform='translate(#{index * (bl * 2) + 11.5},#{bl + 2}) skewX(-8)',class='on')
+                            use(xlink:href='#dp',transform='translate(0,0)')
+                            use(xlink:href='#dp',transform='translate(0,#{bl})')
         canvas#canvas
         script(src='./12.js')
