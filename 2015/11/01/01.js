@@ -1,1 +1,134 @@
-"use strict";function nextAngle(){var n=[ISO_ANGLE,-ISO_ANGLE,Math.PI-ISO_ANGLE,Math.PI+ISO_ANGLE],t=Math.floor(Math.random()*n.length);return n[t]}function lineFactory(n){var t=n||{};return t.color={},t.color.r=Math.floor(64*(3*Math.random()+1)),t.color.g=Math.floor(3*Math.random()*64),t.color.b=Math.floor(3*Math.random()*64),t.points=[],t}function init(){for(var n=0;LINE_AMOUNT>n;n++){var t=lineFactory();polylines.push(t)}polylines.forEach(initLine)}function nextPoint(n,t,o){var i=o||{};n.angle=nextAngle(n.angle),i.x=n.points[t-1].x+Math.cos(n.angle)*SEGMENT_LENGTH,i.y=n.points[t-1].y+Math.sin(n.angle)*SEGMENT_LENGTH,n.points.push(i)}function shiftPoint(n){var t=n.points.shift();nextPoint(n,n.points.length,t)}function initLine(n){n.points.push({x:Math.floor(Math.random()*canvas.width),y:Math.floor(Math.random()*canvas.height)});for(var t=1;SEGMENTS>t;t++)nextPoint(n,t);return n}function draw(n){context.strokeStyle="rgb("+n.color.r+","+n.color.g+","+n.color.b+")";for(var t=1;t<n.points.length;t++)context.beginPath(),context.moveTo(n.points[t-1].x,n.points[t-1].y),context.lineTo(n.points[t].x,n.points[t].y),context.stroke()}function move(n){polylines.forEach(function(n){for(var t=0;t<n.points.length;t++)n.points[t].y+=.01;var o=n.points.filter(function(n){return n.y>0&&n.y<canvas.height&&n.x<canvas.width&&n.x>0});if(0===o.length){var i=polylines.splice(polylines.indexOf(n),1)[0];polylines.push(initLine(lineFactory(i)))}})}function resize(){canvas.width=window.innerWidth,canvas.height=window.innerHeight}function animate(n){context.fillStyle="black",context.fillRect(0,0,canvas.width,canvas.height),polylines.forEach(move),polylines.forEach(draw),frameCount%10==0&&polylines.forEach(shiftPoint),frameCount++,requestAnimationFrame(animate)}var LINE_AMOUNT=42,TAU=2*Math.PI,ISO_ANGLE=27*TAU/360,SEGMENTS=12,SEGMENT_LENGTH=80,polylines=[],canvas=document.getElementById("canvas"),context=canvas.getContext("2d"),frameCount=0;document.addEventListener("DOMContentLoaded",function(n){resize(),init(),animate(),window.addEventListener("resize",resize)});
+'use strict';
+
+var LINE_AMOUNT = 42;
+var TAU = Math.PI * 2;
+var ISO_ANGLE = TAU * 27 / 360;
+var SEGMENTS = 12;
+var SEGMENT_LENGTH = 80;
+
+var polylines = [],
+    canvas = document.getElementById('canvas'),
+    context = canvas.getContext('2d');
+/**
+ * Random angle at 27
+ */
+function nextAngle() {
+    var angles = [ISO_ANGLE, -ISO_ANGLE, Math.PI - ISO_ANGLE, Math.PI + ISO_ANGLE];
+    var index = Math.floor(Math.random() * angles.length);
+    return angles[index];
+}
+/**
+ * Build or reset a line with a random color and empty points.
+ */
+function lineFactory(line) {
+    var obj = line || {};
+    obj.color = {};
+    obj.color.r = Math.floor((Math.random() * 3 + 1) * 64);
+    obj.color.g = Math.floor(Math.random() * 3 * 64);
+    obj.color.b = Math.floor(Math.random() * 3 * 64);
+    obj.points = [];
+    return obj;
+}
+
+function init() {
+    for (var i = 0; i < LINE_AMOUNT; i++) {
+        var line = lineFactory();
+        polylines.push(line);
+    }
+    polylines.forEach(initLine);
+}
+function nextPoint(line, i, point) {
+    var nextPoint = point || {};
+    line.angle = nextAngle(line.angle);
+    nextPoint.x = line.points[i - 1].x + Math.cos(line.angle) * SEGMENT_LENGTH;
+    nextPoint.y = line.points[i - 1].y + Math.sin(line.angle) * SEGMENT_LENGTH;
+    line.points.push(nextPoint);
+}
+/**
+ * Removes first point from the line and add a new one.
+ */
+function shiftPoint(line) {
+    var firstPoint = line.points.shift();
+    nextPoint(line, line.points.length, firstPoint);
+}
+/**
+ * Init a polyline
+ */
+function initLine(line) {
+    line.points.push({
+        x: Math.floor(Math.random() * canvas.width),
+        y: Math.floor(Math.random() * canvas.height)
+    });
+    for (var i = 1; i < SEGMENTS; i++) {
+        nextPoint(line, i);
+    }
+    return line;
+}
+/**
+ * Draw a line on the canvas.
+ */
+function draw(line) {
+    context.strokeStyle = 'rgb(' + line.color.r + ',' + line.color.g + ',' + line.color.b + ')';
+    for (var i = 1; i < line.points.length; i++) {
+        context.beginPath();
+        context.moveTo(line.points[i - 1].x, line.points[i - 1].y);
+        context.lineTo(line.points[i].x, line.points[i].y);
+        context.stroke();
+    }
+}
+/**
+ * Makes the line go down.
+ */
+function move(line) {
+    polylines.forEach(function (line) {
+        for (var i = 0; i < line.points.length; i++) {
+            line.points[i].y += 0.01;
+        }
+        //check if point is out of view
+        var pointsInside = line.points.filter(function (point) {
+            return point.y > 0 && point.y < canvas.height && point.x < canvas.width && point.x > 0;
+        });
+        //reset line
+        if (pointsInside.length === 0) {
+            var removedLine = polylines.splice(polylines.indexOf(line), 1)[0];
+            polylines.push(initLine(lineFactory(removedLine)));
+        }
+    });
+}
+/**
+ * Resize canvas to viewport dimensions.
+ */
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+var frameCount = 0;
+/**
+ * requestAnimationFrame function.
+ */
+function animate(timestamp) {
+    //context.clearRect(0,0,canvas.width,canvas.height);
+    context.fillStyle = 'black';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    //Draw
+    polylines.forEach(move);
+    polylines.forEach(draw);
+
+    if (frameCount % 10 == 0) {
+        polylines.forEach(shiftPoint);
+    }
+    frameCount++;
+    requestAnimationFrame(animate);
+}
+/**
+ * DOM is loaded, initialize stuff...
+ */
+document.addEventListener('DOMContentLoaded', function (event) {
+    //dom is loaded
+    resize();
+    init();
+    animate();
+
+    window.addEventListener('resize', resize);
+});

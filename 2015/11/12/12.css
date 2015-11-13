@@ -3,4 +3,21 @@ body {
   height: 100%;
   overflow: hidden;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  background-color: #000000; }
+
+#container {
+  width: 50%;
+  left: 25%;
+  top: 25%;
+  position: absolute; }
+
+.on {
+  fill: #FF0000;
+  stroke: black;
+  stroke-width: .5; }
+
+.off {
+  fill: #111111;
+  stroke: black;
+  stroke-width: .5; }
