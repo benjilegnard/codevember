@@ -3,5 +3,62 @@ html
         title #Codevember #19 #{days[18].title}
         link(rel='stylesheet',href='./19.css')
     body
+        svg#Chess(viewBox='0 0 8 8', xmlns='http://www.w3.org/2000/svg')
+            each letter,x in ['a','b','c','d','e','f','g','h']
+                each number,y in [8, 7, 6, 5, 4, 3, 2, 1]
+                    //- var position = ''+letter+number
+                    g(id= '' + letter + number)
+                        rect(x=x,y=y,width=1,height=1,fill=((x + y) % 2 == 0) ? 'darkgrey' : 'white')
+                        if(number >= 7)
+                            - var color = 'white'
+                        if(number <= 2)
+                            - var color = 'black'
+                        text(x=x,y=y + .9,class='piece ' + color,font-size=1)
+                            if(number == 7 || number == 2)
+                                | ♟
+                            if(number == 1 || number == 8)
+                                if(letter == 'a' || letter == 'h')
+                                    | ♜
+                                if(letter == 'b' || letter == 'g')
+                                    | ♞
+                                if(letter == 'c' || letter == 'f')
+                                    | ♝
+                                if(letter == 'd')
+                                    | ♚
+                                if(letter == 'e')
+                                    | ♛
+        #pgnInput.popin.closed
+            .popin-content
+                a.popin-close(href='#pgnInput') &times;
+                h1 New Game
+                p Paste here the PGN data
+                textarea(style='')
+                |
+                div
+                    button#parse OK
+
+                    button(type='reset')
+
+          form#Options
+            h1 SVGChess
+            label
+
+          div#GameInfos
+            #White
+              span.icon
+              span.value
+            #Black
+              span.icon
+              span.value
+            #Date
+              span.icon 🕗
+            #Round
+              span.icon
+              span.value
+            #Result
+              span.icon
+              span.value
+
+
         canvas#canvas
         script(src='./19.js')
