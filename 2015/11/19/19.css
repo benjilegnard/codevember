@@ -1,6 +1,84 @@
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  margin: 0;
-  padding: 0; }
+@charset "UTF-8";
+a {
+  text-decoration: none;
+  color: white; }
+
+#Chess {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  left: 25%;
+  top: 25%; }
+
+.piece {
+  stroke-width: .03; }
+  .piece.white {
+    fill: black;
+    color: black;
+    stroke: white;
+    border: white solid 2px; }
+  .piece.black {
+    fill: white;
+    stroke: black; }
+
+.queen.black {
+  content: '♚'; }
+
+/*
+♚
+♛
+♜
+♝
+♞
+♟
+
+♔
+♕
+♖
+♗
+♘
+♙
+*/
+#Options {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2em;
+  background-color: #333;
+  color: white; }
+  #Options h1 {
+    font-size: 1em; }
+
+.popin {
+  top: -100%;
+  position: absolute;
+  animation: top .5s ease-in-out;
+  display: block;
+  left: 50%;
+  top: 50%;
+  width: 480px;
+  height: 320px;
+  margin-left: -240px;
+  margin-top: -160px;
+  background-color: #333;
+  color: white;
+  box-shadow: 0 0 2em rgba(0, 0, 0, 0.5); }
+  .popin.closed {
+    top: 9000px; }
+  .popin.open {
+    z-index: 2;
+    top: 0; }
+    .popin.open:before {
+      content: ' ';
+      background-color: rgba(0, 0, 0, 0.5);
+      position: absolute;
+      z-index: 1; }
+  .popin .popin-content {
+    position: relative;
+    padding: 2em; }
+  .popin .popin-close {
+    font-size: 2em;
+    position: absolute;
+    right: 1em;
+    top: 1em; }
