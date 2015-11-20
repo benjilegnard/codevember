@@ -50,7 +50,7 @@ class RotTreeLine{
         this.children.forEach((line)=>{line.draw();});
     }
     move(){
-        this.angle = this.angle + ROTATION_SPEED*this.speed;
+        this.angle = this.angle + ROTATION_SPEED * this.speed;
         this.x = this.parent.x + Math.cos(this.angle) * this.radius;
         this.y = this.parent.y + Math.sin(this.angle) * this.radius;
         if(this.level == 1){
@@ -68,7 +68,8 @@ const
     resize = () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-    },collision = (line) => {
+    },
+    collision = (line) => {
         if (line.parent.x < 0 || line.parent.x > window.innerWidth) {
             line.direction = TAU / 2 - line.direction;
         }

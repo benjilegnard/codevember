@@ -1,14 +1,14 @@
 const
     TAU = Math.PI * 2,
-    RADIUS_GROW_SPEED = .5,
     ROTATION_SPEED = TAU / 180,
-    DEVIATION_SPEED = .1,
-    NEW_CIRCLE_FREQ = 10,
-    MAX_CIRCLES = 256,
-
+    CIRCLES_PER_SPIRAL = 24,
+    GROW_SPEED = 1,
+    MAX_SPIRALS = 3,
+    ALPHA_DECAY = 0.00025,
+    RESET_DELAY = 360,
     canvas = document.getElementById('canvas'),
     context = canvas.getContext('2d'),
-    circles = [],
+    spirals = [],
     initialDirection = TAU * Math.random(),
     origin = {
         x: canvas.width / 2,
@@ -23,44 +23,70 @@ let
     frameCount = 0,
     circlesAdded = 0;
 
-class Spiral{
-    constructor(props){
-        this.x = props.x;
-        this.y = props.y;
+class Spiral {
+    constructor() {
         this.circles = [];
+        this.init();
+        this.reset();
     }
-    init(){
+    reset() {
+        this.life = 0.2;
 
+        this.x = origin.x;
+        this.y = origin.y;
+        this.radius = 1;
+        for (let i = 0; i < CIRCLES_PER_SPIRAL; i++) {
+            this.circles[i].radius = this.radius/2;
+            // this.circles[i].angle =  i * (TAU / CIRCLES_PER_SPIRAL);
+        }
     }
-    draw(){
-        this.circles.forEach((c)=>{c.draw()});
+    init() {
+        for (let i = 0; i < CIRCLES_PER_SPIRAL; i++) {
+            this.circles.push(new Circle({
+                angle: i * (TAU / CIRCLES_PER_SPIRAL),
+                spiral: this,
+                color: (i % 2 == 0)
+            }));
+        }
+    }
+    draw() {
+        this.circles.forEach((c) => {
+            c.draw()
+        });
+    }
+    move() {
+        this.radius += GROW_SPEED;
+        this.life -= ALPHA_DECAY;
+        this.x += Math.cos(initialDirection);
+        this.y += Math.sin(initialDirection);
+        this.circles.forEach((c) => {
+            c.move()
+        });
     }
 }
 
 class Circle {
     constructor(props) {
-        //this.spiral = props.spiral;
-        this.reset();
+        this.spiral = props.spiral;
+        this.color = props.color;
+        this.angle = props.angle;
+        this.radius = this.spiral.radius / 3;
+
+        this.x = this.spiral.x + Math.cos(this.angle) * this.radius;
+        this.y = this.spiral.y + Math.sin(this.angle) * this.radius;
+
     }
-    reset() {
-        circlesAdded++;
-        this.x = origin.x;
-        this.y = origin.y;
-        this.radius = 1;
-        this.color = 'black';
-        this.angle = initialDirection;
-    }
-    grow() {
-        this.radius += RADIUS_GROW_SPEED;
-        this.angle += ROTATION_SPEED;
-        this.x += Math.cos(this.angle) * DEVIATION_SPEED;
-        this.y += Math.sin(this.angle) * DEVIATION_SPEED;
+    move() {
+        this.radius += GROW_SPEED;
+        this.angle -= ROTATION_SPEED;
+        this.x = this.spiral.x + Math.cos(this.angle) * this.radius;
+        this.y = this.spiral.y + Math.sin(this.angle) * this.radius;
     }
     draw() {
-        context.strokeStyle = this.color;
+        context.fillStyle = this.color ? 'rgb(0,0,0)' : 'rgba(255,255,255)';
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, TAU, true);
-        context.stroke();
+        context.fill();
     }
 }
 
@@ -72,33 +98,33 @@ const
         origin.y = canvas.height / 2;
     },
     animate = () => {
+        //Add new spiral
+        if(frameCount%RESET_DELAY==0){
+            if(spirals.length < MAX_SPIRALS){
+
+                spirals.push(
+                    new Spiral()
+                );
+            }
+        }
         frameCount++;
+        //rest
         context.clearRect(0, 0, canvas.width, canvas.height);
-        circles.forEach((circle) => {
-            circle.grow();
-            circle.draw();
+        context.globalCompositeOperation = 'xor';
+        spirals.forEach((spiral) => {
+            spiral.move();
+            spiral.draw();
         });
-        if (frameCount % NEW_CIRCLE_FREQ == 0) {
-            addCircle();
-        }
+
+        //reset transparent spiral
+        spirals
+            .filter((s)=>{return s.life <=0})
+            .forEach((s)=>{s.reset();});
+
         requestAnimationFrame(animate);
-    },
-    addCircle = () => {
-        if (circles.length > MAX_CIRCLES) {
-            const diagonal = Math.sqrt(canvas.width ^ 2 * canvas.height ^ 2);
-            circles.filter((circle) => {
-                return (circle.radius > diagonal);
-            })[0].reset();
-        } else {
-            circles.push(new Circle());
-        }
-        circles.sort((a, b) => {
-            return b.radius - a.radius;
-        });
     },
     initialize = () => {
         resize();
-        addCircle();
         animate();
     };
 

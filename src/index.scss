@@ -20,7 +20,7 @@ ul {
 h1 {
   text-align: center;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.75);
-  margin-top: 1em;
+  margin: 1em auto;
 }
 
 li {
@@ -50,7 +50,8 @@ canvas {
   //padding: 1em;
   margin: 0 1em 1em 0;
   max-width:320px;
-  float:left;
+  //float:left;
+  display:block;
   a {
     display: block;
     padding: .5em;
