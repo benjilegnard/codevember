@@ -1,1 +1,29 @@
-body{width:100%;height:100%;overflow:hidden;margin:0;padding:0;}
+$bleu:rgb(39,98,141);
+$auLait:rgb(205,192,129);
+$caramel:rgb(162,120,69);
+$santaFe:rgb(120,52,2);
+$candle:rgb(231,255,230);
+
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background:$bleu;
+}
+p.legend{
+  color:$auLait;
+  position:absolute;
+  bottom:1em;
+  right:1em;
+  line-height:1em;
+  a{
+    color:$auLait;
+
+    &:hover,
+    &:focus{
+      color:$candle;
+    }
+  }
+}
