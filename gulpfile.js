@@ -51,13 +51,13 @@ gulp.task('copy-libs',function(){
 gulp.task('es6to5',function(){
 
     return gulp.src(config.src +"**/*.js")
-        //.pipe(sourcemaps.init())
+        .pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['es2015']
         }))
         //.pipe(uglify())
         //.pipe(concat("all.js"))
-        //.pipe(sourcemaps.write("."))
+        .pipe(sourcemaps.write("."))
         .pipe(gulp.dest(config.dest))
         .pipe(connect.reload());
 });

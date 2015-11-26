@@ -1,76 +1,109 @@
-//https://en.wikipedia.org/wiki/Elder_Futhark
-//http://rationalwiki.org/wiki/File:Runes_futhark_old.png
-const RUNES = [{
-        points: [[0, 0], [2, 2]]
-    }],
+const
     TAU = Math.PI * 2,
-    EDGE_RADIUS = 22,
-    MAX_POINTS = 12,
-    LINE_LENGTH = 250,
-    canvas = document.getElementById('canvas'),
-    context = canvas.getContext('2d'),
+    DEVIATION_SPEED = TAU / 180,
+    DRAWING_SPEED = 2,
+    RADIUS_FREQUENCY = 0.01,
+    MAX_RADIUS = 42,
+    INITIAL_POINTS = 15,
     points = [];
 
-let frameCount = 0,
-    currentDirection = TAU * Math.random();
+let frameCount = 0;
 
-const
-    drawLine = (start, end) => {
-        context.strokeStyle = 'rgba(255,255,255,1)';
-        context.lineWidth = .5;
-        randomPointAroundEdge(start);
-        randomPointAroundEdge(end);
+class WobblyCircle {
+    constructor(level, x, y, a) {
+        this.level = level || 0;
+        this.x = x || Math.random() * canvas.width;
+        this.y = y || Math.random() * canvas.height;
+        this.direction = a || TAU * Math.random();
+
+        this.offset = TAU * Math.random();
+        this.dirChangeFrequency = Math.floor(Math.random()*120)+20;
+        this.deviation = ((Math.random() > .5) ? -1 : 1) * (Math.random() * DEVIATION_SPEED);
+    }
+
+    //draw the line
+    draw(context) {
         context.beginPath();
-        context.moveTo(start.x, start.y);
-        context.lineTo(end.x, end.y);
+        context.strokeStyle = 'black';
+        context.arc(this.x, this.y, this.radius+1, 0, TAU, true);
         context.stroke();
-    },
-    randomPointAroundEdge = (point)=> {
-        const randomRadius = Math.floor(Math.random() * EDGE_RADIUS) || 1,
-            randomAngle = Math.random() * TAU;
-        point.x += randomRadius * Math.cos(randomAngle);
-        point.y += randomRadius * Math.sin(randomAngle);
-    },
-    pointFactory = (point)=> {
-        if(point){
-            point.x = Math.random()*canvas.width;
-            point.y = Math.random()*canvas.height;
-        }else{
-            point = {
-                x : Math.random()*canvas.width,
-                y : Math.random()*canvas.height
-            };
-        }
-        currentDirection = TAU * Math.random();
-        return point;
-    },
-    addPoint = ()=> {
-        if (points.length <= MAX_POINTS) {
-            points.push(pointFactory());
-        } else {
-            points.push(pointFactory(points.splice(0, 1)[0]));
-        }
-    },
-    resize = ()=> {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    },
-    animate = ()=> {
-        context.fillStyle = 'rgba(85,85,85,0.05)';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.strokeStyle = 'white';
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, TAU, true);
+        context.stroke();
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, TAU, true);
+        context.stroke();
+    }
 
-        if (frameCount % 60 == 0) {
-            addPoint();
+    //move according to direction + deviation
+    grow(frameCount) {
+        this.direction = this.direction + this.deviation;
+        this.x += Math.cos(this.direction) * DRAWING_SPEED;
+        this.y += Math.sin(this.direction) * DRAWING_SPEED;
+        this.radius = Math.abs(Math.cos(this.offset + (frameCount * RADIUS_FREQUENCY))) * MAX_RADIUS;
+        if(frameCount % this.dirChangeFrequency == 0){
+            this.direction = -this.direction;
         }
+    }
+    collide(canvas){
+        if(this.x > canvas.width + this.radius)
+            this.x = -this.radius;
+        if(this.y > canvas.height + this.radius)
+            this.y = -this.radius;
+        if(this.x < -this.radius)
+            this.x = canvas.width + this.radius;
+        if(this.y < -this.radius)
+            this.y = canvas.height + this.radius;
+    }
+
+}
+
+
+class Scene {
+
+    constructor() {
+        this.canvas = document.getElementById('canvas');
+        this.context = canvas.getContext('2d');
+    }
+
+    initialize() {
+        for (let i = 0; i < INITIAL_POINTS; i++) {
+            points.push(new WobblyCircle());
+        }
+        this.resize();
+        this.animate();
+    }
+
+    animate() {
+        // this.context.clearRect(0,0,this.canvas.width,this.canvas.height);
+        points.forEach((point)=>{
+            point.grow(frameCount);
+            point.draw(this.context);
+            point.collide(this.canvas);
+        });
         frameCount++;
-        for(let i = 1; i < points.length;i++){
-            drawLine(points[i-1],points[i]);
-        }
-        requestAnimationFrame(animate);
-    }, initialize = ()=> {
-        resize();
-        animate();
-    };
+        requestAnimationFrame(()=> {
+            this.animate();
+        })
+    }
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+}
 
-window.addEventListener('resize', resize);
-document.addEventListener('DOMContentLoaded', initialize);
+document.addEventListener(
+    'DOMContentLoaded',
+    ()=> {
+        window.scene = new Scene();
+        scene.resize();
+        scene.initialize();
+    }
+);
+window.addEventListener(
+    'resize',
+    ()=> {
+        window.scene.resize();
+    }
+);

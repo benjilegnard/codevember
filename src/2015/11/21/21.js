@@ -42,7 +42,7 @@ const
             context.strokeStyle = LINE_COLOR;
             context.stroke(path);
         },
-    animate = (timestamp)=> {
+    animate = (timestamp) => {
         context.fillStyle = BACK_COLOR;
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.fillRect(0, 0, canvas.width, canvas.height);
@@ -51,7 +51,7 @@ const
         requestAnimationFrame(animate);
     },
     resize =
-        (event)=> {
+        (event) => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         },
@@ -68,7 +68,7 @@ const
             request.send();
         },
     initialize =
-        (event)=> {
+        (event) => {
             requestSource();
             resize();
             animate();
