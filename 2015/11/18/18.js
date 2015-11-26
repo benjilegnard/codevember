@@ -200,3 +200,4 @@ document.addEventListener('DOMContentLoaded', function (evt) {
 window.addEventListener('resize', function () {
     window.scene.resize();
 });
+//# sourceMappingURL=18.js.map

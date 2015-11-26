@@ -97,3 +97,4 @@ canvas.addEventListener('mousedown', function (e) {
     origin.x = e.clientX;
     origin.y = e.clientY;
 });
+//# sourceMappingURL=07.js.map

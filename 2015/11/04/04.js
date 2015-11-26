@@ -195,3 +195,4 @@ window.addEventListener('resize', resize);
 document.addEventListener('DOMContentLoaded', initialize);
 canvas.addEventListener('click', clickHandler);
 canvas.addEventListener('touch', touchHandler);
+//# sourceMappingURL=04.js.map

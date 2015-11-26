@@ -103,3 +103,4 @@ var resize = function resize() {
 
 window.addEventListener('resize', resize);
 document.addEventListener('DOMContentLoaded', initialize);
+//# sourceMappingURL=15.js.map

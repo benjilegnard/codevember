@@ -155,3 +155,4 @@ collisionDetector = function collisionDetector(point) {
 window.addEventListener('resize', resizer, false);
 canvas.addEventListener('click', clickHandler);
 document.addEventListener('DOMContentLoaded', initializer);
+//# sourceMappingURL=09.js.map

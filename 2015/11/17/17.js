@@ -114,3 +114,4 @@ canvas.addEventListener('mousedown', function (e) {
 canvas.addEventListener('mouseout', function (e) {
     origin = getOrigin();
 });
+//# sourceMappingURL=17.js.map

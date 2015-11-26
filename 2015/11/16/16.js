@@ -156,3 +156,4 @@ var resize = function resize() {
 
 window.addEventListener('resize', resize);
 document.addEventListener('DOMContentLoaded', initialize);
+//# sourceMappingURL=16.js.map

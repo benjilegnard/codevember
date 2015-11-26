@@ -179,3 +179,4 @@ canvas.addEventListener('mousemove', changeOrigin);
 document.addEventListener('mouseleave', function (e) {
     origin = getOrigin();
 });
+//# sourceMappingURL=08.js.map

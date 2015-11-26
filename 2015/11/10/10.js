@@ -109,3 +109,4 @@ collide = function collide(point) {
 window.addEventListener('resize', resize, false);
 canvas.addEventListener('click', clickHandler);
 document.addEventListener('DOMContentLoaded', initialize);
+//# sourceMappingURL=10.js.map

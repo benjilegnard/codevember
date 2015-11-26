@@ -180,3 +180,4 @@ document.addEventListener('touch', touch);
 document.addEventListener('click', click);
 window.addEventListener('resize', resize);
 document.addEventListener('DOMContentLoaded', init);
+//# sourceMappingURL=06.js.map

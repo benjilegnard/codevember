@@ -3,4 +3,16 @@ body {
   height: 100%;
   overflow: hidden;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  background: #27628d; }
+
+p.legend {
+  color: #cdc081;
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+  line-height: 1em; }
+  p.legend a {
+    color: #cdc081; }
+    p.legend a:hover, p.legend a:focus {
+      color: #e7ffe6; }

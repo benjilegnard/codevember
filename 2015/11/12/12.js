@@ -105,3 +105,4 @@ document.addEventListener('DOMContentLoaded', function () {
     refreshDate();
 });
 window.addEventListener('resize', resize);
+//# sourceMappingURL=12.js.map

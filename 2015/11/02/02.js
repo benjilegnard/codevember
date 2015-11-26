@@ -168,3 +168,4 @@ function animate(timestamp) {
 
 window.addEventListener('resize', resize);
 document.addEventListener('DOMContentLoaded', initialize);
+//# sourceMappingURL=02.js.map

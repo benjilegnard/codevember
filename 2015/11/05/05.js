@@ -109,3 +109,4 @@ document.addEventListener('DOMContentLoaded', function (event) {
     resize();
     animate(1);
 });
+//# sourceMappingURL=05.js.map
