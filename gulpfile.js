@@ -41,9 +41,12 @@ gulp.task('copy-libs',function(){
             config.deps + 'delaunay-fast/delaunay.js',
             config.deps + 'matter-js/build/matter.js',
             config.deps + 'pixi.js/bin/pixi.js',
+            config.deps + 'gif.js/dist/gif.js',
+            config.deps + 'gif.js/dist/gif.worker.js',
             config.deps + 'three/three.js',
             config.deps + 'gsap/src/uncompressed/TweenLite.min.js'
         ])
+        //removes the /node_modules/ + lib name directory structure.
         .pipe(rename({dirname: ''}))
         .pipe(gulp.dest(config.dest+'/libs'));
 });
