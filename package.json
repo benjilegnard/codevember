@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "delaunay-fast": "^1.0.1",
+    "gif.js": "^0.1.6",
     "gsap": "^1.18.0",
     "matter-js": "^0.8.0",
     "pixi.js": "^3.0.8",

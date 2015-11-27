@@ -12,7 +12,6 @@ const TAU = Math.PI * 2,
     circles = [];
 
 let
-    radius = window.innerHeight / 3,
     frameCount = 0;
 /**
  * The curve, is a bezier line that goes from center to target, and its control point are moving
@@ -57,9 +56,9 @@ class Curve {
             x:origin.x + Math.cos(this.angle) * this.parent.radius,
             y:origin.y + Math.sin(this.angle) * this.parent.radius
         };
-        //TODO move ctrlpoint1 perpendicular to the left from the middle of the radius
-        //TODO move ctrlpoint2 perpendicular to the right from the middle of the radius
+        // move ctrlpoint1 perpendicular to the left from the middle of the radius
         this.ctrl1 = this.controlPoint(true);
+        // move ctrlpoint2 perpendicular to the right from the middle of the radius
         this.ctrl2 = this.controlPoint(false);
         this.angle += ROTATION_SPEED * this.parent.rotationDirection;
     }
