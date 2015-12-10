@@ -1,8 +1,8 @@
 const TAU = Math.PI * 2,
     GRAVITY = .1,
-    MAX_SPEED = 3,
+    MAX_SPEED = 2,
     MAX_PARTICLES = 320,
-    COLOR_CYCLE_STEP = 0.25,
+    COLOR_CYCLE_STEP = 2,//0.25,
     particles = [];
 
 
@@ -15,8 +15,8 @@ class Particle {
         this.speed = opts.s || Math.random() * MAX_SPEED;
         this.vx = Math.cos(this.angle) * this.speed;
         this.vy = Math.sin(this.angle) * this.speed;
-        this.colors = [[128, 128, 128], [255, 255, 255]];
-        this.color = [0, 0, 0];
+        //this.colors = [[128, 128, 128], [255, 255, 255]];
+        //this.color = [128, 128, 128];
         this.alpha = 1;
         this.colorIndex = 0;
     }
@@ -61,17 +61,19 @@ class Particle {
             this.colorCycle(this.colorIndex + 1);
         }
         //next color
-        if (this.colors[this.colorIndex + 1] == this.color) {
+        if (this.colors[this.colorIndex + 1] === this.color) {
             this.colorIndex++;
         }
     }
 
     colorCycle(toIndex) {
+        if(this.hasOwnProperty('color') && this.colors.length === 3){
         for (let rgb in this.color) {
             if (this.color[rgb] < this.colors[toIndex][rgb])
                 this.color[rgb] = this.color[rgb] + COLOR_CYCLE_STEP;
             else if (this.color[rgb] > this.colors[toIndex][rgb])
                 this.color[rgb] = this.color[rgb] - COLOR_CYCLE_STEP;
+        }
         }
     }
 }
@@ -80,7 +82,8 @@ class Particle {
 class Smoke extends Particle {
     constructor(opts) {
         super(opts);
-        this.colors = [[255, 255, 255], [0, 0, 0]];
+        this.colors = [[64, 64, 64], [0, 0, 0]];
+        this.color = this.colors[0];
     }
 
     grow() {
@@ -104,7 +107,8 @@ class Fire extends Particle {
     constructor(opts) {
         super(opts);
         this.reset(this.x, this.y);
-        this.colors = [[133, 27, 24], [0, 0, 0], [249, 240, 136]];
+        this.colors = [[134, 28, 24],/* [0, 0, 0],*/ [250, 240, 136]];
+        this.color = this.colors[0];
     }
 
     grow() {
