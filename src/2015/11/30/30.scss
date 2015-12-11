@@ -6,3 +6,19 @@ body {
   padding: 0;
   background-color:#666;
 }
+
+
+svg#rounds{
+
+}
+
+svg#thats-all-folks{
+  path{
+    fill:none;
+    stroke:white;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-dashoffset: 2000;
+    //stroke-dashoffset:;
+  }
+}
