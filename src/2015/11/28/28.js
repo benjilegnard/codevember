@@ -2,8 +2,8 @@ const TAU = Math.PI * 2,
     GRAVITY = .1,
     MAX_SPEED = 2,
     MAX_PARTICLES = 320,
-    COLOR_CYCLE_STEP = 2,//0.25,
-    particles = [];
+    COLOR_CYCLE_STEP = 1;
+
 
 
 class Particle {
@@ -15,8 +15,6 @@ class Particle {
         this.speed = opts.s || Math.random() * MAX_SPEED;
         this.vx = Math.cos(this.angle) * this.speed;
         this.vy = Math.sin(this.angle) * this.speed;
-        //this.colors = [[128, 128, 128], [255, 255, 255]];
-        //this.color = [128, 128, 128];
         this.alpha = 1;
         this.colorIndex = 0;
     }
@@ -32,11 +30,6 @@ class Particle {
         this.vy += GRAVITY;
         this.x += this.vx;
         this.y += this.vy;
-
-        /*
-         this.x += Math.cos(this.angle) * this.speed;
-         this.y += Math.sin(this.angle) * this.speed + GRAVITY;
-         */
     }
 
     reset(x, y) {
@@ -67,13 +60,13 @@ class Particle {
     }
 
     colorCycle(toIndex) {
-        if(this.hasOwnProperty('color') && this.colors.length === 3){
-        for (let rgb in this.color) {
-            if (this.color[rgb] < this.colors[toIndex][rgb])
-                this.color[rgb] = this.color[rgb] + COLOR_CYCLE_STEP;
-            else if (this.color[rgb] > this.colors[toIndex][rgb])
-                this.color[rgb] = this.color[rgb] - COLOR_CYCLE_STEP;
-        }
+        if(this.hasOwnProperty('color')){
+            for (const rgb in [0,1,2]) {
+                if (this.color[rgb] < this.colors[toIndex][rgb])
+                    this.color[rgb] = this.color[rgb] + COLOR_CYCLE_STEP;
+                else if (this.color[rgb] > this.colors[toIndex][rgb])
+                    this.color[rgb] = this.color[rgb] - COLOR_CYCLE_STEP;
+            }
         }
     }
 }
@@ -107,7 +100,7 @@ class Fire extends Particle {
     constructor(opts) {
         super(opts);
         this.reset(this.x, this.y);
-        this.colors = [[134, 28, 24],/* [0, 0, 0],*/ [250, 240, 136]];
+        this.colors = [[255, 249, 177], [211, 152, 24],[195, 67, 25]];
         this.color = this.colors[0];
     }
 
