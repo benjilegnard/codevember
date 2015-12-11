@@ -3,4 +3,20 @@ body {
   height: 100%;
   overflow: hidden;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  background-color: #666; }
+
+.a {
+  color: #8B1B18; }
+
+.b {
+  color: #c34319; }
+
+.c {
+  color: #d39818; }
+
+.d {
+  color: #DED56B; }
+
+.e {
+  color: #fff9b1; }
